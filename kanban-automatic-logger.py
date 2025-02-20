@@ -1,5 +1,6 @@
 import csv
 import os
+import time
 
 # Make sure the directory below has no "\" and instead only has "/"
 mainFolderToLogDir = "" # Insert the file path of the folder you want to "copy"
@@ -50,7 +51,10 @@ def scanFolder(folderFilePath: str):
         for folderPath in scanFolders:
             scanFolder(folderPath)
 
-scanFolder(mainFolderToLogDir)
+startTime = time.perf_counter()
+scanFolder(scanFolders[0])
+endTime = time.perf_counter()
+timeTaken = endTime-startTime
 
 # This writes the new CSV file, it overwrites what's already there or creates a new one based on it's name.
 splitDirectoryPath = mainFolderToLogDir.split("/")
@@ -59,4 +63,4 @@ with open("generated/"+outputName+".csv", "w", newline="") as csvfile:
     writer = csv.writer(csvfile)
     writer.writerows(data)
 
-print("[kanban-automatic-logger] Completed. " + str(folderCount) + " folder(s) with " + str(trueFoundFiles) + " files found.")
+print("[kanban-automatic-logger] Completed. " + f"{folderCount:,}" + " folder(s) with " + f"{trueFoundFiles:,}" + f" files found in {timeTaken:.4f} seconds")
