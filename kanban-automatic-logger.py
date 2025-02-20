@@ -1,6 +1,7 @@
 import csv
 import os
 
+# Make sure the directory below has no "\" and instead only has "/"
 mainFolderToLogDir = "" # Insert the file path of the folder you want to "copy"
 outputDir = "generated" # This is the output folder which is where the .csv file will be placed.
 
@@ -35,7 +36,7 @@ def scanFolder(folderFilePath: str):
             data.append([fileNameSplit[0],"." + fileNameSplit[1],"Generated",folderFilePath.replace(mainFolderToLogDir, ""),""])
             foundFiles += 1
     
-    print("[kanban-automatic-logger] " + foundFiles + " file(s) found.")
+    print("[kanban-automatic-logger] " + str(foundFiles) + " file(s) found.")
 
     if needToScanAgain == True:
         for folderPath in scanFolders:
@@ -44,6 +45,8 @@ def scanFolder(folderFilePath: str):
 scanFolder(mainFolderToLogDir)
 
 # This writes the new CSV file, it overwrites what's already there or creates a new one based on it's name.
-with open("generated/output.csv", "w", newline="") as csvfile:
+splitDirectoryPath = mainFolderToLogDir.split("/")
+outputName = splitDirectoryPath[len(splitDirectoryPath)-1]
+with open("generated/"+outputName+".csv", "w", newline="") as csvfile:
     writer = csv.writer(csvfile)
     writer.writerows(data)
