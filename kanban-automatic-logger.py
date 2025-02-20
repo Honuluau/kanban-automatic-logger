@@ -15,7 +15,13 @@ scanFolders = [mainFolderToLogDir]
 # If it's a folder, it is marked to be scanned again.
 # After scanning the whole folder, for every new folder that was scanned, it will scan those too. 
 # This is known as recursion.
+folderCount = 0
+trueFoundFiles = 0
 def scanFolder(folderFilePath: str):
+    global trueFoundFiles
+    global folderCount
+    folderCount += 1
+
     print("[kanban-automatic-logger] Scanning " + folderFilePath)
     scanFolders.remove(folderFilePath) # Remove the folder from the Array to not repeatedly scan it.
 
@@ -33,10 +39,12 @@ def scanFolder(folderFilePath: str):
         else:
             # File is not a folder/directory.
             fileNameSplit = filename.split(".")
-            data.append([fileNameSplit[0],"." + fileNameSplit[1],"Generated",folderFilePath.replace(mainFolderToLogDir, ""),""])
+            fileExtension = fileNameSplit[len(fileNameSplit)-1]
+            data.append([fileNameSplit[0],"." + fileExtension,"Generated",folderFilePath.replace(mainFolderToLogDir, ""),""])
             foundFiles += 1
     
     print("[kanban-automatic-logger] " + str(foundFiles) + " file(s) found.")
+    trueFoundFiles += foundFiles
 
     if needToScanAgain == True:
         for folderPath in scanFolders:
@@ -50,3 +58,5 @@ outputName = splitDirectoryPath[len(splitDirectoryPath)-1]
 with open("generated/"+outputName+".csv", "w", newline="") as csvfile:
     writer = csv.writer(csvfile)
     writer.writerows(data)
+
+print("[kanban-automatic-logger] Completed. " + str(folderCount) + " folder(s) with " + str(trueFoundFiles) + " files found.")
