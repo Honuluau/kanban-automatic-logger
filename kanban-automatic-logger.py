@@ -1,22 +1,25 @@
 import csv
 import os
 
-# Directory to copy from.
 mainFolderToLogDir = "" # Insert the file path of the folder you want to "copy"
-outputDir = "generated"
+outputDir = "generated" # This is the output folder which is where the .csv file will be placed.
 
 # Base Data to hold every file as their name, stage will always be Generated, parent folder name, no note by default.
 data = [["File Name", "File Type", "Stage", "Parent Folder", "Changes / Notes"]]
 
-# Folders found to be scanned will be scanned here.
+# This array holds the file paths to scan folders for recursion.
 scanFolders = [mainFolderToLogDir]
 
-# Scan the folder to import the data
+# Function scans all of the files in a directory/folder. If it's a file, it will insert it into the data. 
+# If it's a folder, it is marked to be scanned again.
+# After scanning the whole folder, for every new folder that was scanned, it will scan those too. 
+# This is known as recursion.
 def scanFolder(folderFilePath: str):
     print("[kanban-automatic-logger] Scanning " + folderFilePath)
-    scanFolders.remove(folderFilePath)
+    scanFolders.remove(folderFilePath) # Remove the folder from the Array to not repeatedly scan it.
 
-    needToScanAgain = False
+    needToScanAgain = False # Do not scan again if there are no folders a.k.a a break statement.
+    foundFiles = 0
     for file in os.listdir(os.fsencode(folderFilePath)):
         filename = os.fsdecode(file)
         filePath = folderFilePath + "/" + filename
@@ -27,17 +30,20 @@ def scanFolder(folderFilePath: str):
             scanFolders.append(filePath)
             needToScanAgain = True
         else:
-            print(filename)
+            # File is not a folder/directory.
             fileNameSplit = filename.split(".")
             data.append([fileNameSplit[0],"." + fileNameSplit[1],"Generated",folderFilePath.replace(mainFolderToLogDir, ""),""])
-            # File is a file.
+            foundFiles += 1
     
+    print("[kanban-automatic-logger] " + foundFiles + " file(s) found.")
+
     if needToScanAgain == True:
         for folderPath in scanFolders:
             scanFolder(folderPath)
 
 scanFolder(mainFolderToLogDir)
 
-with open("generated/test1.csv", "w", newline="") as csvfile:
+# This writes the new CSV file, it overwrites what's already there or creates a new one based on it's name.
+with open("generated/output.csv", "w", newline="") as csvfile:
     writer = csv.writer(csvfile)
     writer.writerows(data)
