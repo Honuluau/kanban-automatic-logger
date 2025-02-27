@@ -23,7 +23,7 @@ def scanFolder(folderFilePath: str):
     global folderCount
     folderCount += 1
 
-    print("[kanban-automatic-logger] Scanning " + folderFilePath)
+    print("[kanban-automator] Scanning " + folderFilePath)
     scanFolders.remove(folderFilePath) # Remove the folder from the Array to not repeatedly scan it.
 
     needToScanAgain = False # Do not scan again if there are no folders a.k.a a break statement.
@@ -44,7 +44,7 @@ def scanFolder(folderFilePath: str):
             data.append([fileNameSplit[0],"." + fileExtension,"Generated",folderFilePath.replace(mainFolderToLogDir, ""),""])
             foundFiles += 1
     
-    print("[kanban-automatic-logger] " + str(foundFiles) + " file(s) found.")
+    print("[kanban-automator] " + str(foundFiles) + " file(s) found.")
     trueFoundFiles += foundFiles
 
     if needToScanAgain == True:
@@ -63,4 +63,4 @@ with open("generated/"+outputName+".csv", "w", newline="") as csvfile:
     writer = csv.writer(csvfile)
     writer.writerows(data)
 
-print("[kanban-automatic-logger] Completed. " + f"{folderCount:,}" + " folder(s) with " + f"{trueFoundFiles:,}" + f" files found in {timeTaken:.4f} seconds")
+print("[kanban-automator] Completed. " + f"{folderCount:,}" + " folder(s) with " + f"{trueFoundFiles:,}" + f" files found in {timeTaken:.4f} seconds")
