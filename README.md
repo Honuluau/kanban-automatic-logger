@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 # Kanban Automator
+=======
+# Kanban Automatic Logger
+>>>>>>> d1cd2ba0093e40e5fe037325868fcba54fe92c93
 This is a one use-case python script to solve a very specific problem.[^1]
 
 This script is intended to cut time creating the Kanban Board completely. As of right now, logging a file which you have changed takes only a few seconds, but it adds up over time. This well hopefully organize and do a lot of the heaving lifting. Designed to work with Windows OS.
